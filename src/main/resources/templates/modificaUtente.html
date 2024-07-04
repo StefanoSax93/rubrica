@@ -21,9 +21,11 @@
     <div class="container-fluid">
         <a class="navbar-brand text-light me-5" href="/">
             <span class="fw-bold">Rubrica</span>
-            <img src="https://cdn.pixabay.com/photo/2013/04/01/09/18/address-book-98482_1280.png" alt="rubrica" style="max-width: 50px;transform: rotate3d(-1,-1,-1, 15deg)">
+            <img src="https://cdn.pixabay.com/photo/2013/04/01/09/18/address-book-98482_1280.png" alt="rubrica"
+                 style="max-width: 50px;transform: rotate3d(-1,-1,-1, 15deg)">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -77,11 +79,17 @@
                     </button>
                 </div>
                 <div id="phoneNumbers">
-                    <div th:each="phoneNumber, iterStat : ${utente.phoneNumbers}" class="d-flex align-items-center mb-2">
-                        <input type="text" class="form-control" th:field="*{phoneNumbers[__${iterStat.index}__]}" th:value="${phoneNumber}" placeholder="Numero di telefono"/>
-                        <button th:if="${#lists.size(utente.phoneNumbers) > 1}" type="button" class="btn btn-danger ms-2" onclick="removePhoneNumber(this)">
-                            <i class="fa-solid fa-minus"></i>
-                        </button>
+                    <div th:each="phoneNumber, iterStat : ${utente.phoneNumbers}">
+                        <div class="d-flex align-items-center mb-2">
+                            <input type="text" class="form-control" th:field="*{phoneNumbers[__${iterStat.index}__]}"
+                                   th:value="${phoneNumber}" placeholder="Numero di telefono"/>
+                            <button th:if="${#lists.size(utente.phoneNumbers) > 1}" type="button"
+                                    class="btn btn-danger ms-2" onclick="removePhoneNumber(this)">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+                        </div>
+                        <p class="text-danger" th:if="${#fields.hasErrors('phoneNumbers[__${iterStat.index}__]')}"
+                           th:errors="*{phoneNumbers[__${iterStat.index}__]}"></p>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary">Modifica</button>
@@ -126,25 +134,35 @@
 
     function removePhoneNumber(button) {
         const phoneNumberDiv = button.parentNode;
+        const errorParagraph = phoneNumberDiv.nextElementSibling;
+
+        if (errorParagraph) {
+            errorParagraph.remove();
+        }
+
         phoneNumberDiv.parentNode.removeChild(phoneNumberDiv);
 
         phoneNumberIndex--;
 
-        // Hide all remove buttons if only one phone number remains
-        if (phoneNumberIndex <= 1) {
-            const removeButtons = document.querySelectorAll('#phoneNumbers .btn-danger');
-            removeButtons.forEach(btn => btn.style.display = 'none');
+        // Controlla se ci sono più button di eliminazione(e quindi più campi input per numeri di telefono)
+        // e se è così non mostra il primo in modo che non possa essere eliminato
+        const removeButtons = document.querySelectorAll('#phoneNumbers .btn-danger');
+        if (removeButtons.length > 0) {
+            removeButtons[0].style.display = 'none';
         }
     }
 
-    // Initial check to show/hide remove buttons on page load
+    // Fa la stessa cosa appena sopra, ma al ricaricamento della pagina, restando in ascolto
     document.addEventListener('DOMContentLoaded', function() {
-        if (phoneNumberIndex <= 1) {
-            const removeButtons = document.querySelectorAll('#phoneNumbers .btn-danger');
-            removeButtons.forEach(btn => btn.style.display = 'none');
+        const removeButtons = document.querySelectorAll('#phoneNumbers .btn-danger');
+        if (removeButtons.length > 0) {
+            removeButtons[0].style.display = 'none';
         }
+
     });
 </script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 </html>

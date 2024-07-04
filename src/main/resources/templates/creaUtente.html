@@ -12,7 +12,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&display=swap');
 
         body {
-        font-family: "Playwrite GB S", cursive;
+            font-family: "Playwrite GB S", cursive;
         }
     </style>
 </head>
@@ -73,19 +73,23 @@
                     <input type="number" class="form-control" id="age" th:field="*{age}"/>
                     <p class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></p>
                 </div>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <label class="form-label">Numeri di telefono:</label>
+                    <button type="button" class="btn btn-outline-success" onclick="addPhoneNumber()">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
                 <div class="mb-3" id="phoneNumbers">
-                    <div class="d-flex align-items-center justify-content-between mb-3">
-                        <label class="form-label">Numeri di telefono:</label>
-                        <button type="button" class="btn btn-outline-success" onclick="addPhoneNumber()">
-                            <i class="fa-solid fa-plus"></i>
-                        </button>
+                    <!-- Campo iniziale per il numero di telefono -->
+                    <div th:each="phoneNumber, iterStat : *{phoneNumbers}" class="phoneNumber">
+                        <div class="d-flex align-items-center mb-2">
+                            <input type="text" class="form-control" th:field="*{phoneNumbers[__${iterStat.index}__]}" placeholder="Numero di telefono"/>
+                            <button type="button" class="btn btn-danger ms-2" onclick="removePhoneNumber(this)">
+                                <i class="fa-solid fa-minus"></i>
+                            </button>
+                        </div>
+                        <p class="text-danger" th:if="${#fields.hasErrors('phoneNumbers[__${iterStat.index}__]')}" th:errors="*{phoneNumbers[__${iterStat.index}__]}"></p>
                     </div>
-                    <div class="phoneNumber">
-                        <input type="text" class="form-control mb-2" th:field="*{phoneNumbers[0]}"
-                               placeholder="Numero di telefono"/>
-                        <p class="text-danger" th:if="${#fields.hasErrors('phoneNumbers')}" th:errors="*{phoneNumbers}"></p>
-                    </div>
-
                 </div>
                 <button type="submit" class="btn btn-primary">Crea Utente</button>
             </form>
@@ -94,17 +98,18 @@
 </div>
 
 <script>
-    let phoneNumberIndex = 1;
+    let phoneNumberIndex = [[${#lists.size(utente.phoneNumbers)}]];
     const phoneNumbersDiv = document.getElementById('phoneNumbers');
 
+    // Funzione per aggiungere un campo di input per il numero di telefono
     function addPhoneNumber() {
         const phoneNumberDiv = document.createElement('div');
-        phoneNumberDiv.classList.add('d-flex', 'align-items-center');
+        phoneNumberDiv.classList.add('phoneNumber', 'd-flex', 'align-items-center');
 
         const input = document.createElement('input');
         input.type = 'text';
         input.name = 'phoneNumbers[' + phoneNumberIndex + ']';
-        input.classList.add('form-control', 'my-3');
+        input.classList.add('form-control', 'mb-2');
         input.placeholder = 'Numero di telefono';
 
         const button = document.createElement('button');
@@ -117,16 +122,49 @@
 
         button.appendChild(icon);
         phoneNumberDiv.appendChild(input);
-        phoneNumberDiv.appendChild(button);
+        // Aggiunge il tasto meno solo se l'indice è superiore a 0 quindi se ci sono più numeri di telefono
+        if (phoneNumberIndex > 0) {
+            phoneNumberDiv.appendChild(button);
+        }
+
+        const error = document.createElement('p');
+        error.classList.add('text-danger');
+        error.setAttribute('th:if', `\${#fields.hasErrors('phoneNumbers[' + phoneNumberIndex + ']')}`);
+        error.setAttribute('th:errors', `*{phoneNumbers[' + phoneNumberIndex + ']}`);
+
+        phoneNumberDiv.appendChild(error);
         phoneNumbersDiv.appendChild(phoneNumberDiv);
 
         phoneNumberIndex++;
     }
 
+    // Funzione per rimuovere un campo di input per il numero di telefono
     function removePhoneNumber(button) {
         const phoneNumberDiv = button.parentNode;
+        const errorParagraph = phoneNumberDiv.nextElementSibling;
+
+        if (errorParagraph) {
+            errorParagraph.remove();
+        }
+
         phoneNumberDiv.parentNode.removeChild(phoneNumberDiv);
+        phoneNumberIndex--; // Decrementa l'indice quando si rimuove un campo
     }
+
+    // Controlla se ci sono numeri di telefono iniziali e aggiunge uno se non ce n'è già uno
+    document.addEventListener('DOMContentLoaded', function() {
+        const phoneNumbers = document.querySelectorAll('#phoneNumbers .phoneNumber');
+        if (phoneNumbers.length === 0) {
+            addPhoneNumber(); // Aggiunge un campo di input se non ce n'è già uno
+        } else {
+            phoneNumberIndex = phoneNumbers.length; // Aggiorna l'indice in base al numero di campi presenti
+        }
+
+        const removeButtons = document.querySelectorAll('#phoneNumbers .phoneNumber button');
+        if (removeButtons.length > 0) {
+            removeButtons[0].style.display = 'none';
+        }
+    });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"

@@ -1,5 +1,7 @@
 package com.example.rubrica.dto;
 
+import com.example.rubrica.model.Phone;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,5 +27,7 @@ public class UtentiDto {
     @Max(value = 99, message = "L'' utente deve avere al massimo 99 anni")
     private Integer age;
 
-    private List<String> phoneNumbers = new ArrayList<>();
+    private List<@NotBlank(message = "Il numero di telefono non può essere vuoto")
+            @Pattern(regexp = "(^$|[0-9]{10})", message = "Il numero di telefono deve contenere solo numeri, e al massimo dieci cifre")
+            String> phoneNumbers = new ArrayList<>();
 }
