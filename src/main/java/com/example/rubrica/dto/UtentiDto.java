@@ -6,6 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @AllArgsConstructor
 @Getter
 @Setter
@@ -22,7 +25,5 @@ public class UtentiDto {
     @Max(value = 99, message = "L'' utente deve avere al massimo 99 anni")
     private Integer age;
 
-    @NotBlank(message = "Il numero di telefono non può essere vuoto")
-    @Pattern(regexp = "(^$|[0-9]{10})", message = "Il numero di telefono deve contenere solo numeri, e al massimo dieci cifre")
-    private String phoneNumber;
+    private List<String> phoneNumbers = new ArrayList<>();
 }

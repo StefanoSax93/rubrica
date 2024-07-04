@@ -60,25 +60,91 @@
     <div class="d-flex flex-column align-items-center justify-content-center">
         <h1 class="text-center my-4">Modifica Utente <i class="fa-solid text-success fa-user-pen"></i></h1>
         <div class="rounded shadow p-5 w-50 bg-light">
-            <form action="/rubrica/update/{id}" method="post" th:object="${utente}" th:action="@{/rubrica/update/{id}(id=${utente.id})}">
+            <form action="#" th:action="@{/rubrica/update/{id}(id=${utente.id})}" th:object="${utente}" method="post">
                 <input type="hidden" name="id" th:value="${utente.id}"/>
                 <label class="form-label">Nome:</label>
-                <input type="text" class="form-control" name="name" th:value="${utente.name}"/>
+                <input type="text" class="form-control" th:field="*{name}"/>
                 <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
                 <br/>
                 <label class="form-label">Età:</label>
-                <input type="text" class="form-control" name="age" th:value="${utente.age}"/>
+                <input type="text" class="form-control" th:field="*{age}"/>
                 <p class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></p>
                 <br/>
-                <label class="form-label">Numero di telefono Principale:</label>
-                <input type="text" class="form-control" name="phoneNumber" th:value="${utente.phoneNumber}" />
-                <p class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></p>
-                <br/>
+                <div class="d-flex align-items-center justify-content-between mb-3">
+                    <label class="form-label">Numeri di telefono:</label>
+                    <button type="button" class="btn btn-outline-success" onclick="addPhoneNumber()">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </div>
+                <div id="phoneNumbers">
+                    <div th:each="phoneNumber, iterStat : ${utente.phoneNumbers}" class="d-flex align-items-center mb-2">
+                        <input type="text" class="form-control" th:field="*{phoneNumbers[__${iterStat.index}__]}" th:value="${phoneNumber}" placeholder="Numero di telefono"/>
+                        <button th:if="${#lists.size(utente.phoneNumbers) > 1}" type="button" class="btn btn-danger ms-2" onclick="removePhoneNumber(this)">
+                            <i class="fa-solid fa-minus"></i>
+                        </button>
+                    </div>
+                </div>
                 <button type="submit" class="btn btn-primary">Modifica</button>
             </form>
         </div>
     </div>
 </div>
+<script>
+    let phoneNumberIndex = [[${#lists.size(utente.phoneNumbers)}]];
+    const phoneNumbersDiv = document.getElementById('phoneNumbers');
+
+    function addPhoneNumber() {
+        const phoneNumberDiv = document.createElement('div');
+        phoneNumberDiv.classList.add('d-flex', 'align-items-center');
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'phoneNumbers[' + phoneNumberIndex + ']';
+        input.classList.add('form-control', 'my-3');
+        input.placeholder = 'Numero di telefono';
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.classList.add('btn', 'btn-danger', 'ms-2');
+        button.onclick = function() { removePhoneNumber(button); };
+
+        const icon = document.createElement('i');
+        icon.classList.add('fa-solid', 'fa-minus');
+
+        button.appendChild(icon);
+        phoneNumberDiv.appendChild(input);
+        phoneNumberDiv.appendChild(button);
+        phoneNumbersDiv.appendChild(phoneNumberDiv);
+
+        phoneNumberIndex++;
+
+        if (phoneNumberIndex > 1) {
+            const removeButtons = document.querySelectorAll('#phoneNumbers .btn-danger');
+            removeButtons.forEach(btn => btn.style.display = 'inline-block');
+        }
+    }
+
+    function removePhoneNumber(button) {
+        const phoneNumberDiv = button.parentNode;
+        phoneNumberDiv.parentNode.removeChild(phoneNumberDiv);
+
+        phoneNumberIndex--;
+
+        // Hide all remove buttons if only one phone number remains
+        if (phoneNumberIndex <= 1) {
+            const removeButtons = document.querySelectorAll('#phoneNumbers .btn-danger');
+            removeButtons.forEach(btn => btn.style.display = 'none');
+        }
+    }
+
+    // Initial check to show/hide remove buttons on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        if (phoneNumberIndex <= 1) {
+            const removeButtons = document.querySelectorAll('#phoneNumbers .btn-danger');
+            removeButtons.forEach(btn => btn.style.display = 'none');
+        }
+    });
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </body>
 </html>

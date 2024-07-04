@@ -21,9 +21,11 @@
     <div class="container-fluid">
         <a class="navbar-brand text-light me-5" href="/">
             <span class="fw-bold">Rubrica</span>
-            <img src="https://cdn.pixabay.com/photo/2013/04/01/09/18/address-book-98482_1280.png" alt="rubrica" style="max-width: 50px;transform: rotate3d(-1,-1,-1, 15deg)">
+            <img src="https://cdn.pixabay.com/photo/2013/04/01/09/18/address-book-98482_1280.png" alt="rubrica"
+                 style="max-width: 50px;transform: rotate3d(-1,-1,-1, 15deg)">
         </a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -71,16 +73,63 @@
                     <input type="number" class="form-control" id="age" th:field="*{age}"/>
                     <p class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></p>
                 </div>
-                <div class="mb-3">
-                    <label for="phoneNumber" class="form-label">Numero di telefono:</label>
-                    <input type="text" id="phoneNumber" class="form-control" th:field="*{phoneNumber}"/>
-                    <p class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"></p>
+                <div class="mb-3" id="phoneNumbers">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <label class="form-label">Numeri di telefono:</label>
+                        <button type="button" class="btn btn-outline-success" onclick="addPhoneNumber()">
+                            <i class="fa-solid fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="phoneNumber">
+                        <input type="text" class="form-control mb-2" th:field="*{phoneNumbers[0]}"
+                               placeholder="Numero di telefono"/>
+                        <p class="text-danger" th:if="${#fields.hasErrors('phoneNumbers')}" th:errors="*{phoneNumbers}"></p>
+                    </div>
+
                 </div>
                 <button type="submit" class="btn btn-primary">Crea Utente</button>
             </form>
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<script>
+    let phoneNumberIndex = 1;
+    const phoneNumbersDiv = document.getElementById('phoneNumbers');
+
+    function addPhoneNumber() {
+        const phoneNumberDiv = document.createElement('div');
+        phoneNumberDiv.classList.add('d-flex', 'align-items-center');
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.name = 'phoneNumbers[' + phoneNumberIndex + ']';
+        input.classList.add('form-control', 'my-3');
+        input.placeholder = 'Numero di telefono';
+
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.classList.add('btn', 'btn-danger', 'ms-2');
+        button.onclick = function() { removePhoneNumber(button); };
+
+        const icon = document.createElement('i');
+        icon.classList.add('fa-solid', 'fa-minus');
+
+        button.appendChild(icon);
+        phoneNumberDiv.appendChild(input);
+        phoneNumberDiv.appendChild(button);
+        phoneNumbersDiv.appendChild(phoneNumberDiv);
+
+        phoneNumberIndex++;
+    }
+
+    function removePhoneNumber(button) {
+        const phoneNumberDiv = button.parentNode;
+        phoneNumberDiv.parentNode.removeChild(phoneNumberDiv);
+    }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 </html>

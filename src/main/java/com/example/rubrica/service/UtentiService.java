@@ -35,15 +35,14 @@ public class UtentiService {
         utente.setName(utenteDto.getName());
         utente.setAge(utenteDto.getAge());
 
-        Phone phone = new Phone();
-        phone.setPhoneNumber(utenteDto.getPhoneNumber());
-        phone.setUtenti(utente);
+        for (String phoneNumber : utenteDto.getPhoneNumbers()) {
+            Phone phone = new Phone();
+            phone.setPhoneNumber(phoneNumber);
+            phone.setUtenti(utente);
+            utente.getPhoneNumber().add(phone);
+        }
 
-        utente.getPhoneNumber().add(phone);
-        utentiRepository.save(utente);
-        phoneRepository.save(phone);
-
-        return utente;
+        return utentiRepository.save(utente);
     }
 
     public Utenti updateUtente(UtentiDto utenteDto) {
@@ -51,21 +50,15 @@ public class UtentiService {
 
         if (optionalUtente.isPresent()) {
             Utenti utente = optionalUtente.get();
-
             utente.setName(utenteDto.getName());
             utente.setAge(utenteDto.getAge());
 
-            Set<Phone> phones = utente.getPhoneNumber();
-            if (!phones.isEmpty()) {
-                Phone firstPhone = phones.stream().findFirst().orElse(null);
-                firstPhone.setPhoneNumber(utenteDto.getPhoneNumber());
-                phoneRepository.save(firstPhone);
-            } else {
-                Phone newPhone = new Phone();
-                newPhone.setPhoneNumber(utenteDto.getPhoneNumber());
-                newPhone.setUtenti(utente);
-                phones.add(newPhone);
-                phoneRepository.save(newPhone);
+            utente.getPhoneNumber().clear();
+            for (String phoneNumber : utenteDto.getPhoneNumbers()) {
+                Phone phone = new Phone();
+                phone.setPhoneNumber(phoneNumber);
+                phone.setUtenti(utente);
+                utente.getPhoneNumber().add(phone);
             }
 
             return utentiRepository.save(utente);

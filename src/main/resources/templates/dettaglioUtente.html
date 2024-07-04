@@ -97,7 +97,7 @@
                         <div class="link-icon">
                             <a th:href="@{/phone/modifica/{id}(id=${phone.id})}" class="text-warning"><i class="fa-solid fa-wrench"></i></a>
                         </div>
-                        <div>
+                        <div th:if="${utente.phoneNumber.size() > 1}">
                             <form th:action="@{/phone/elimina/{id}(id=${phone.id})}" method="post" style="display:inline;">
                                 <input type="hidden" value="delete"/>
                                 <button type="submit" class="border-0 bg-white"><i class="fa-solid text-danger fa-trash"></i></button>

@@ -1,6 +1,7 @@
 package com.example.rubrica.controller;
 
 import com.example.rubrica.dto.UtentiDto;
+import com.example.rubrica.model.Phone;
 import com.example.rubrica.model.Utenti;
 import com.example.rubrica.service.UtentiService;
 import jakarta.validation.Valid;
@@ -29,7 +30,7 @@ public class UtentiController {
 
     @GetMapping("/creaUtente")
     public String creaUtente(Model model) {
-        model.addAttribute("utente", new Utenti());
+        model.addAttribute("utente", new UtentiDto());
         return "creaUtente";
     }
 
@@ -49,15 +50,16 @@ public class UtentiController {
         return "dettaglioUtente";
     }
 
-
     @GetMapping("/modificaUtente/{id}")
-    public String modificaUtente(@PathVariable Integer id,Model model) {
+    public String modificaUtente(@PathVariable Integer id, Model model) {
         Utenti utente = utentiService.getUtente(id);
         UtentiDto user = new UtentiDto();
         user.setId(utente.getId());
         user.setName(utente.getName());
         user.setAge(utente.getAge());
-        user.setPhoneNumber(String.valueOf(Objects.requireNonNull(utente.getPhoneNumber().stream().findFirst().orElse(null)).getPhoneNumber()));
+        for (Phone phone : utente.getPhoneNumber()) {
+            user.getPhoneNumbers().add(phone.getPhoneNumber());
+        }
         model.addAttribute("utente", user);
         return "modificaUtente";
     }
