@@ -27,4 +27,13 @@ public class UserService implements UserDetailsService {
         }
         return null;
     }
+
+    public AppUser getProfile(Integer id) {
+        return userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+    }
+
+    public Integer getUserIdByEmail(String email) {
+        AppUser user = userRepository.findByEmail(email);
+        return (user != null) ? user.getId() : null;
+    }
 }
