@@ -34,6 +34,7 @@ public class UtentiService {
         Utenti utente = new Utenti();
         utente.setName(utenteDto.getName());
         utente.setAge(utenteDto.getAge());
+        utente.setEmail(utenteDto.getEmail());
 
         for (String phoneNumber : utenteDto.getPhoneNumbers()) {
             Phone phone = new Phone();
@@ -52,6 +53,7 @@ public class UtentiService {
             Utenti utente = optionalUtente.get();
             utente.setName(utenteDto.getName());
             utente.setAge(utenteDto.getAge());
+            utente.setEmail(utenteDto.getEmail());
 
             utente.getPhoneNumber().clear();
             for (String phoneNumber : utenteDto.getPhoneNumbers()) {

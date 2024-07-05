@@ -68,6 +68,10 @@
                 <input type="text" class="form-control" th:field="*{name}"/>
                 <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
                 <br/>
+                <label class="form-label">Email:</label>
+                <input type="text" class="form-control" th:field="*{email}"/>
+                <p class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                <br/>
                 <label class="form-label">Età:</label>
                 <input type="text" class="form-control" th:field="*{age}"/>
                 <p class="text-danger" th:if="${#fields.hasErrors('age')}" th:errors="*{age}"></p>

@@ -57,6 +57,7 @@ public class UtentiController {
         user.setId(utente.getId());
         user.setName(utente.getName());
         user.setAge(utente.getAge());
+        user.setEmail(utente.getEmail());
         for (Phone phone : utente.getPhoneNumber()) {
             user.getPhoneNumbers().add(phone.getPhoneNumber());
         }

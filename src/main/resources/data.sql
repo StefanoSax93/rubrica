@@ -1,9 +1,9 @@
-INSERT INTO Utenti (age, name)
+INSERT INTO Utenti (age, name,email)
 VALUES
-    (19, 'Mario Rossi'),
-    (21, 'Andrea Neri'),
-    (32, 'Luca Bianchi'),
-    (43, 'Carlo Viola');
+    (19, 'Mario Rossi','mario.rossi@gmai.com'),
+    (21, 'Andrea Neri','andrea.neri@gmai.com'),
+    (32, 'Luca Bianchi','luca.bianchi@gmai.com'),
+    (43, 'Carlo Viola','carlo.viola@gmai.com');
 
 INSERT INTO Phone (utente_id, phoneNumber)
 VALUES

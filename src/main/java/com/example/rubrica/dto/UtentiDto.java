@@ -22,6 +22,11 @@ public class UtentiDto {
     @NotBlank(message = "Il nome non può essere vuoto o una stringa vuota")
     private String name;
 
+    @NotBlank(message = "L'' email non può essere vuota o una stringa vuota")
+    @Email(message = "L'' email deve contenere la chiocciola @")
+    private String email;
+
+
     @NotNull(message = "Il campo età non può essere nullo")
     @Min(value = 5, message = "L'' utente deve avere almeno 5 anni")
     @Max(value = 99, message = "L'' utente deve avere al massimo 99 anni")
