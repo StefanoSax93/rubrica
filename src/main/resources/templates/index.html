@@ -10,28 +10,51 @@
     @import url('https://fonts.googleapis.com/css2?family=Playwrite+GB+S:ital,wght@0,100..400;1,100..400&display=swap');
 
     body {
-    font-family: "Playwrite GB S", cursive;
+       font-family: "Playwrite GB S", cursive;
     }
 
     #rubrica:hover {
-    transform: scale(1.1);
-    transition: transform 0.2s ease;
+       transform: scale(1.1);
+       transition: transform 0.2s ease;
+    }
+
+    #logout-message {
+       opacity: 1;
+       transition: opacity 0.4s ease-out;
     }
 </style>
 <body>
 <div th:insert="~{fragments/navbar :: navbar}"></div>
 
 <div class="container my-5">
+    <div th:if="${param.logout}" id="logout-message" class="alert alert-success">Hai effettuato il logout.</div>
     <h2 class="text-center">Benvenuto nella rubrica</h2>
     <div class="d-flex align-items-center justify-content-center mt-5">
         <a href="/rubrica" id="rubrica">
-            <img src="https://cdn.pixabay.com/photo/2013/04/01/09/18/address-book-98482_1280.png" alt="rubrica" style="max-width: 500px;">
+            <img src="https://cdn.pixabay.com/photo/2013/04/01/09/18/address-book-98482_1280.png" alt="rubrica"
+                 style="max-width: 500px;">
         </a>
     </div>
 </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+      let logoutMessage = document.getElementById("logout-message");
+
+      if (logoutMessage) {
+        setTimeout(function() {
+          logoutMessage.style.opacity = 0;
+        }, 4000);
+        setTimeout(function() {
+          logoutMessage.style.display = "none";
+        }, 4500);
+      }
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
 </body>
 </html>
 
